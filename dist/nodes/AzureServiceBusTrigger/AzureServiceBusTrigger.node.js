@@ -43,6 +43,13 @@ class AzureServiceBusTrigger {
                     description: 'The resource to listen to',
                 },
                 {
+                    displayName: 'Max Retry Attempts',
+                    name: 'maxRetryAttempts',
+                    type: 'number',
+                    default: 1000000,
+                    description: 'Maximum number of retry attempts for transient errors. Set a very large number to approximate infinite retries. (SDK does not support -1)',
+                },
+                {
                     displayName: 'Session Mode',
                     name: 'sessionMode',
                     type: 'options',
@@ -155,6 +162,11 @@ class AzureServiceBusTrigger {
     async trigger() {
         console.log('🚀 Azure Service Bus Trigger started');
         const resource = this.getNodeParameter('resource');
+        let maxRetryAttempts = this.getNodeParameter('maxRetryAttempts', 1000000);
+        // Azure SDK expects maxRetries >= 0, so convert negative values to a very large number for infinite
+        if (typeof maxRetryAttempts !== 'number' || maxRetryAttempts < 0) {
+            maxRetryAttempts = 1000000;
+        }
         const maxConcurrentCalls = this.getNodeParameter('maxConcurrentCalls', 1);
         const autoComplete = this.getNodeParameter('autoComplete', true);
         const sessionMode = this.getNodeParameter('sessionMode', 'none');
@@ -169,18 +181,24 @@ class AzureServiceBusTrigger {
         }
         console.log('🔗 Creating ServiceBusClient with WebSockets transport...');
         let serviceBusClient;
+        const retryOptions = {
+            maxRetries: maxRetryAttempts,
+            retryDelayInMs: 1000,
+            maxRetryDelayInMs: 30000,
+        };
         try {
             const WebSocket = require('ws');
             serviceBusClient = new service_bus_1.ServiceBusClient(connectionString, {
                 webSocketOptions: {
                     webSocket: WebSocket,
                 },
+                retryOptions,
             });
-            console.log('✅ ServiceBusClient created with WebSockets transport');
+            console.log('✅ ServiceBusClient created with WebSockets transport and retry options');
         }
         catch (wsError) {
             console.log('⚠️ WebSockets not available, using default transport');
-            serviceBusClient = new service_bus_1.ServiceBusClient(connectionString);
+            serviceBusClient = new service_bus_1.ServiceBusClient(connectionString, { retryOptions });
         }
         let receivers = [];
         let entityName;
