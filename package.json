@@ -1,19 +1,19 @@
 {
-  "name": "@taxmanagementnz/n8n-nodes-azure-servicebus",
-  "version": "1.0.1",
-  "description": "Azure Service Bus nodes for n8n with full session support using official @azure/service-bus based on pokash community node",
+  "name": "@minze/n8n-nodes-azure-servicebus",
+  "version": "1.0.2",
+  "description": "Azure Service Bus nodes for n8n with full session support using official @azure/service-bus based on pokash and  TaxManagementNewZealand community node",
   "keywords": [
     "n8n-community-node-package"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/TaxManagementNewZealand/n8n-nodes-azure-servicebus",
+  "homepage": "https://github.com/minze25/n8n-nodes-azure-servicebus",
   "author": {
-    "name": "Lukasz Gabrysiak",
-    "email": "l.gabrysiak@pokash.pl"
+    "name": "Aitor Garcia",
+    "email": "bbminze@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/TaxManagementNewZealand/n8n-nodes-azure-servicebus.git"
+    "url": "https://github.com/minze25/n8n-nodes-azure-servicebus.git"
   },
   "main": "index.js",
   "scripts": {

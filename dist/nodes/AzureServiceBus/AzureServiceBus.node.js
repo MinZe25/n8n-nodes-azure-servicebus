@@ -530,7 +530,7 @@ class AzureServiceBus {
                             hasSessionId: !!sessionId,
                             hasProperties: !!(messageProperties === null || messageProperties === void 0 ? void 0 : messageProperties.property)
                         });
-                        if (!messageBody || messageBody.trim() === '') {
+                        if ( !messageBody || (typeof messageBody === 'string' && messageBody.trim() === '')) {
                             console.error('❌ Message body is empty!');
                             throw new n8n_workflow_1.NodeOperationError(this.getNode(), 'Message Body cannot be empty');
                         }
